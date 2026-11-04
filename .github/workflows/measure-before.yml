@@ -1,8 +1,6 @@
 name: Preuve CodeQL initiale
 on:
-  pull_request:
-    types: [opened, synchronize]
-    paths: ['.github/workflows/measure-before.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

@@ -75,15 +75,24 @@ URLs à utiliser uniquement contre sa propre instance locale de TP :
 Les trois tests de `tests/security.test.js` échouent sur le code initial et passent après correction. Le test des préférences vérifie le refus HTTP 400 et l'absence de pollution, sans prétendre prouver une pollution réussie avant correction. Le module de processus est simulé même sur l'ancien code.
 
 - [Échec des 3 tests sur l'ancien code](reports/regression-before.txt).
-- 36 tests passent après correction : les 2 tests fournis, 3 régressions de sécurité et 31 cas de validation/comportement.
+- [36 tests passent après correction](reports/tests-after.txt) : les 2 tests fournis, 3 régressions de sécurité et 31 cas de validation/comportement.
 - Code initial conservé dans le commit [`dd462b6`](https://github.com/AYZERTY/devsecops-tp/commit/dd462b6d283cd70f0a5e5bb937f3c8fb065468e3).
-- Corrections préparées dans la branche `fix/security`, avec une pull request vers `main`.
+- Corrections préparées dans la branche `fix/security`, avec la [pull request #1](https://github.com/AYZERTY/devsecops-tp/pull/1) vers `main`.
 
 #### Relevé CodeQL
 
 CodeQL est configuré par le workflow `codeql.yml` (configuration avancée versionnée). Il n'est pas nécessaire d'activer en parallèle le mode Default, qui ferait doublon. L'analyse utilise `security-extended` et bloque si une alerte de sécurité subsiste.
 
-Le relevé exact des règles, lignes et gravités est ajouté après la comparaison automatisée des deux versions.
+Résultats réellement produits par l'analyse du code initial :
+
+| Règle CodeQL | Fichier | Ligne initiale | Gravité |
+| --- | --- | ---: | --- |
+| `js/reflected-xss` | `src/app.js` | 12 | High, score 7,8 |
+| `js/missing-rate-limiting` | `src/app.js` | 16 | High, score 7,5 |
+
+L'injection de commande et la fusion des préférences ont été relevées manuellement : cette exécution de CodeQL ne les a pas signalées. En plus des trois corrections demandées, `/ping` est maintenant limité à 30 requêtes par minute et par IP. Après correction, **0 alerte de sécurité CodeQL** sur la même suite `security-extended`.
+
+[Rapport avant](reports/codeql-before.json), [rapport après](reports/codeql-after.json) et [exécution CodeQL verte](https://github.com/AYZERTY/devsecops-tp/actions/runs/41844870869).
 
 ### 4. Pipeline durci
 
@@ -101,7 +110,7 @@ La protection attendue pour `main` impose une PR et la réussite de `test`, `dep
 
 ### 5. Image Docker
 
-Le Dockerfile utilise `node:22.23.4-alpine3.24`, deux étapes, `npm ci --omit=dev`, une copie séparée de `package*.json`, l'utilisateur `node` et le lancement direct de `src/index.js`.
+Le Dockerfile utilise `node:22.23.4-alpine3.24`, deux étapes, `npm ci --omit=dev`, une copie séparée de `package*.json`, l'utilisateur `node` et le lancement direct de `src/index.js`. npm et Yarn sont retirés de l’image d’exécution : ils ne servent plus une fois les dépendances installées. Le npm fourni par la base contenait encore 10 CVE HIGH corrigeables, absentes après ce retrait.
 
 ```bash
 docker build -t devsecops-tp:optim .

@@ -1,15 +1,21 @@
 npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
-> devsecops-tp@1.0.0 test
-> jest --runInBand --json --outputFile=reports/tests-after.json
+> devsecops-tp@1.0.0 test:coverage
+> jest --runInBand --coverage
 
+PASS tests/rate-limit.test.js
 PASS tests/routes.test.js
 PASS tests/security.test.js
 PASS tests/app.test.js
+----------|---------|----------|---------|---------|-------------------
+File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------|---------|----------|---------|---------|-------------------
+All files |     100 |      100 |     100 |     100 |                   
+ app.js   |     100 |      100 |     100 |     100 |                   
+----------|---------|----------|---------|---------|-------------------
 
-Test Suites: 3 passed, 3 total
-Tests:       35 passed, 35 total
+Test Suites: 4 passed, 4 total
+Tests:       36 passed, 36 total
 Snapshots:   0 total
-Time:        0.556 s, estimated 1 s
+Time:        0.824 s, estimated 1 s
 Ran all test suites.
-Test results written to: reports/tests-after.json

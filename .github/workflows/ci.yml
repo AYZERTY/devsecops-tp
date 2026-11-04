@@ -52,7 +52,7 @@ jobs:
           IMAGE: devsecops-tp:${{ github.sha }}
         run: |
           test "$(docker image inspect --format '{{.Config.User}}' "$IMAGE")" = node
-          docker run --rm "$IMAGE" sh -c 'test ! -d /app/.git && test ! -f /app/.env && test ! -d /app/node_modules/jest && command -v ping'
+          docker run --rm "$IMAGE" sh -c 'test ! -d /app/.git && test ! -f /app/.env && test ! -d /app/node_modules/jest && test ! -d /usr/local/lib/node_modules/npm && command -v ping'
           docker run -d --name api-test -p 127.0.0.1:3000:3000 "$IMAGE"
           trap 'docker logs api-test; docker rm -f api-test' EXIT
           curl --fail --silent --show-error --retry 15 --retry-all-errors --retry-connrefused --retry-delay 1 --max-time 3 --retry-max-time 30 http://127.0.0.1:3000/health | grep '"status":"ok"'
@@ -77,7 +77,7 @@ jobs:
       - name: Bloquer les failles corrigeables
         env:
           IMAGE: devsecops-tp:${{ github.sha }}
-        run: trivy image --scanners vuln --skip-db-update --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 "$IMAGE"
+        run: trivy image --cache-dir .cache/trivy --scanners vuln --skip-db-update --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 "$IMAGE"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
