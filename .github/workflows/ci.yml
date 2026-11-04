@@ -78,7 +78,7 @@ jobs:
         env:
           IMAGE: devsecops-tp:${{ github.sha }}
         run: trivy image --cache-dir .cache/trivy --scanners vuln --skip-db-update --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 "$IMAGE"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: mesures-image-${{ github.run_id }}
