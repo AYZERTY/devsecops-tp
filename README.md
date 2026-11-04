@@ -54,7 +54,7 @@ Mesures du 4 novembre 2026, avec `npm audit --json`, dépendances de développem
 
 Express passe de `4.17.1` à `4.22.3` et Lodash de `4.17.15` à `4.18.1`. `express-rate-limit` limite aussi les appels à `/ping`. Lodash sert uniquement à échapper le HTML ; la fusion récursive des préférences a été supprimée. Les dépendances sont verrouillées dans `package-lock.json`.
 
-Les alertes restantes sont basses ou modérées, principalement dans la chaîne de tests Jest. Elles restent visibles : le seuil demandé est `high`, et non « aucune vulnérabilité ». Les dépendances de test sont absentes de l'image finale.
+Les alertes restantes sont basses ou modérées, principalement dans la chaîne de tests Jest. Elles restent visibles : le seuil demandé est `high`, et non « aucune vulnérabilité ». Les dépendances de test sont absentes de l'image finale. Un [audit limité aux dépendances de production](reports/npm-audit-production.json) relève **0 vulnérabilité**, toutes gravités confondues.
 
 - [Audit avant](reports/npm-audit-before.json) et [audit après](reports/npm-audit-after.json).
 - [CI initial : test vert, deps-audit rouge](https://github.com/AYZERTY/devsecops-tp/actions/runs/41841573184).
@@ -125,9 +125,9 @@ Mesures sur les runners GitHub Linux amd64. Taille locale non compressée ; couc
 | Image | Taille | Couches | HIGH | CRITICAL |
 | --- | ---: | ---: | ---: | ---: |
 | Naïve | 1 176 467 298 octets (1 121,97 Mio) | 11 | 532 | 20 |
-| Optimisée | Mesure CI en cours | — | — | — |
+| Optimisée | 172 777 111 octets (164,77 Mio) | 9 | 0 | 0 |
 
-[Mesure initiale](https://github.com/AYZERTY/devsecops-tp/actions/runs/41841572971) et [résumé](reports/image-before.json). La CI conserve les rapports d'inspection, l'historique et le scan complet en artefacts.
+[Mesure initiale](https://github.com/AYZERTY/devsecops-tp/actions/runs/41841572971) et [résumé](reports/image-before.json). [Mesure finale et CI verte](https://github.com/AYZERTY/devsecops-tp/actions/runs/41845489867) et [résumé final](reports/image-after.json). La CI conserve les rapports d'inspection, l'historique et le scan complet en artefacts.
 
 **Quelle couche pèse le plus ?** La couche d'installation des outils de compilation et bibliothèques Debian : environ 588 Mo. Elle vient de la base `node:22`, avant l'ajout de l'application.
 

@@ -1,0 +1,12 @@
+{
+  "image_id": "sha256:2c874f3de586efc67e7e467647f300df1e1bef1aed6036996650f50bf5314013",
+  "bytes": 172777111,
+  "mib": 164.77,
+  "layers": 9,
+  "high": 0,
+  "critical": 0,
+  "fixable_high": 0,
+  "fixable_critical": 0,
+  "commit": "bfb94f78f39608f0645b66f860bd0dcf5d717372",
+  "run_url": "https://github.com/AYZERTY/devsecops-tp/actions/runs/41845489867"
+}
