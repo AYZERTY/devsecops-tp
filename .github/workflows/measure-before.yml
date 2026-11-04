@@ -42,7 +42,7 @@ jobs:
           print('CODEQL_BEFORE_JSON=' + json.dumps(alerts))
           Path('/tmp/codeql-before/summary.json').write_text(json.dumps(alerts, indent=2))
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: codeql-avant
           path: /tmp/codeql-before/
