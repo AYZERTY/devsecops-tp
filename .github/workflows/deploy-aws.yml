@@ -33,7 +33,7 @@ jobs:
       ECS_SERVICE: ${{ vars.ECS_SERVICE }}
       ECS_CONTAINER_NAME: ${{ vars.ECS_CONTAINER_NAME }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
