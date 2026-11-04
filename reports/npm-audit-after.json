@@ -14,18 +14,12 @@
         "jest-runtime",
         "jest-snapshot"
       ],
-      "effects": [
-        "jest"
-      ],
+      "effects": [],
       "range": "*",
       "nodes": [
         "node_modules/@jest/core"
       ],
-      "fixAvailable": {
-        "name": "jest",
-        "version": "25.1.0",
-        "isSemVerMajor": true
-      }
+      "fixAvailable": true
     },
     "@jest/expect": {
       "name": "@jest/expect",
@@ -162,7 +156,11 @@
       "nodes": [
         "node_modules/create-jest"
       ],
-      "fixAvailable": true
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
     },
     "deepmerge": {
       "name": "deepmerge",
@@ -272,12 +270,18 @@
         "create-jest",
         "jest-config"
       ],
-      "effects": [],
+      "effects": [
+        "jest"
+      ],
       "range": ">=25.2.0-alpha.86",
       "nodes": [
         "node_modules/jest-cli"
       ],
-      "fixAvailable": true
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
     },
     "jest-config": {
       "name": "jest-config",
@@ -457,12 +461,12 @@
       "total": 20
     },
     "dependencies": {
-      "prod": 70,
+      "prod": 74,
       "dev": 289,
       "optional": 1,
       "peer": 0,
       "peerOptional": 0,
-      "total": 358
+      "total": 362
     }
   }
 }

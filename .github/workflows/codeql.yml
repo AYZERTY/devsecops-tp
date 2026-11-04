@@ -35,9 +35,13 @@ jobs:
           import json
           from pathlib import Path
           alerts = []
-          for p in Path('/tmp/codeql-results').glob('*.sarif'):
+          files = list(Path('/tmp/codeql-results').glob('*.sarif'))
+          if not files:
+              raise SystemExit('Rapport SARIF absent')
+          for p in files:
               for run in json.loads(p.read_text())['runs']:
-                  rules = {r['id']: r for r in run['tool']['driver']['rules']}
+                  components = [run['tool']['driver'], *run['tool'].get('extensions', [])]
+                  rules = {r['id']: r for component in components for r in component.get('rules', [])}
                   for result in run.get('results', []):
                       rule = rules[result['ruleId']]
                       if 'security-severity' in rule.get('properties', {}):

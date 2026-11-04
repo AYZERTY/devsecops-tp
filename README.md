@@ -22,7 +22,7 @@ L'API écoute sur le port 3000. Pour changer le port : `PORT=4000 npm start`. `.
 | --- | --- |
 | `/health` | État de l'application |
 | `/hello?name=Lina` | Message de bienvenue avec échappement HTML |
-| `/ping?host=example.com` | Un ping, sans shell, avec délai maximum de 3 secondes |
+| `/ping?host=example.com` | Un ping, sans shell, délai maximum de 3 secondes et 30 requêtes/minute/IP |
 | `/prefs?theme=dark&lang=en` | Thème `light` ou `dark`, langue `fr` ou `en` |
 
 Le programme `ping` doit être installé si l'application est lancée hors Docker. Il est disponible dans l'image Alpine. Les tests simulent ce programme : ils n'envoient aucun paquet sur le réseau.
@@ -52,7 +52,7 @@ Mesures du 4 novembre 2026, avec `npm audit --json`, dépendances de développem
 | Avant | 0 | 5 | 16 | 7 |
 | Après | 0 | 0 | 16 | 4 |
 
-Express passe de `4.17.1` à `4.22.3` et Lodash de `4.17.15` à `4.18.1`. Lodash sert uniquement à échapper le HTML ; la fusion récursive des préférences a été supprimée. Les dépendances sont verrouillées dans `package-lock.json`.
+Express passe de `4.17.1` à `4.22.3` et Lodash de `4.17.15` à `4.18.1`. `express-rate-limit` limite aussi les appels à `/ping`. Lodash sert uniquement à échapper le HTML ; la fusion récursive des préférences a été supprimée. Les dépendances sont verrouillées dans `package-lock.json`.
 
 Les alertes restantes sont basses ou modérées, principalement dans la chaîne de tests Jest. Elles restent visibles : le seuil demandé est `high`, et non « aucune vulnérabilité ». Les dépendances de test sont absentes de l'image finale.
 
@@ -75,7 +75,7 @@ URLs à utiliser uniquement contre sa propre instance locale de TP :
 Les trois tests de `tests/security.test.js` échouent sur le code initial et passent après correction. Le test des préférences vérifie le refus HTTP 400 et l'absence de pollution, sans prétendre prouver une pollution réussie avant correction. Le module de processus est simulé même sur l'ancien code.
 
 - [Échec des 3 tests sur l'ancien code](reports/regression-before.txt).
-- 35 tests passent après correction : les 2 tests fournis, 3 régressions de sécurité et 30 cas de validation/comportement.
+- 36 tests passent après correction : les 2 tests fournis, 3 régressions de sécurité et 31 cas de validation/comportement.
 - Code initial conservé dans le commit [`dd462b6`](https://github.com/AYZERTY/devsecops-tp/commit/dd462b6d283cd70f0a5e5bb937f3c8fb065468e3).
 - Corrections préparées dans la branche `fix/security`, avec une pull request vers `main`.
 
@@ -115,7 +115,7 @@ Mesures sur les runners GitHub Linux amd64. Taille locale non compressée ; couc
 
 | Image | Taille | Couches | HIGH | CRITICAL |
 | --- | ---: | ---: | ---: | ---: |
-| Naïve | 1 176 467 298 octets (1 122,44 Mio) | 11 | 532 | 20 |
+| Naïve | 1 176 467 298 octets (1 121,97 Mio) | 11 | 532 | 20 |
 | Optimisée | Mesure CI en cours | — | — | — |
 
 [Mesure initiale](https://github.com/AYZERTY/devsecops-tp/actions/runs/41841572971) et [résumé](reports/image-before.json). La CI conserve les rapports d'inspection, l'historique et le scan complet en artefacts.

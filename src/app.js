@@ -2,6 +2,7 @@ const express = require('express');
 const { execFile } = require('node:child_process');
 const { isIP } = require('node:net');
 const escapeHtml = require('lodash/escape');
+const { rateLimit } = require('express-rate-limit');
 const app = express();
 app.disable('x-powered-by');
 app.set('query parser', 'simple');
@@ -23,7 +24,15 @@ app.get('/hello', (req, res) => {
   res.type('html').send(`<h1>Bonjour ${escapeHtml(name)}</h1>`);
 });
 
-app.get('/ping', (req, res) => {
+const pingLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 30,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: 'Trop de requêtes, réessaie dans une minute' },
+});
+
+app.get('/ping', pingLimiter, (req, res) => {
   const host = req.query.host;
   if (!validHost(host)) return res.status(400).json({ error: 'Hôte invalide' });
   execFile('ping', ['-c', '1', host], { timeout: 3000, maxBuffer: 65536 }, (err, stdout) => {
