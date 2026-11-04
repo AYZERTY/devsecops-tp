@@ -28,3 +28,22 @@ jobs:
       - uses: github/codeql-action/analyze@v4
         with:
           category: /language:javascript-typescript
+          output: /tmp/codeql-results
+      - name: Vérifier les résultats de sécurité
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          alerts = []
+          for p in Path('/tmp/codeql-results').glob('*.sarif'):
+              for run in json.loads(p.read_text())['runs']:
+                  rules = {r['id']: r for r in run['tool']['driver']['rules']}
+                  for result in run.get('results', []):
+                      rule = rules[result['ruleId']]
+                      if 'security-severity' in rule.get('properties', {}):
+                          loc = result['locations'][0]['physicalLocation']
+                          alerts.append({'rule': result['ruleId'], 'file': loc['artifactLocation']['uri'], 'line': loc['region']['startLine'], 'severity': rule['properties']['security-severity']})
+          print('CODEQL_JSON=' + json.dumps(alerts))
+          if alerts:
+              raise SystemExit('Des alertes de sécurité CodeQL restent à corriger')
+          PY

@@ -1,0 +1,12 @@
+{
+  "image": "naive",
+  "bytes": 1176467298,
+  "layers": 11,
+  "high": 532,
+  "critical": 20,
+  "base": "node:22",
+  "image_id": "sha256:ad5a8201c5016ffe3d471868922a4ec0e27385a684879b89907c087dc7962ee6",
+  "run_url": "https://github.com/AYZERTY/devsecops-tp/actions/runs/41841572971",
+  "commit": "dd462b6d283cd70f0a5e5bb937f3c8fb065468e3",
+  "largest_layer": "588 MB: outils de compilation et bibliothèques Debian"
+}
