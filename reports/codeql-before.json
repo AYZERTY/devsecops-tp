@@ -1,0 +1,18 @@
+{
+  "commit": "dd462b6d283cd70f0a5e5bb937f3c8fb065468e3",
+  "run_url": "https://github.com/AYZERTY/devsecops-tp/actions/runs/41844870894",
+  "alerts": [
+    {
+      "rule": "js/reflected-xss",
+      "file": "src/app.js",
+      "line": 12,
+      "severity": "7.8"
+    },
+    {
+      "rule": "js/missing-rate-limiting",
+      "file": "src/app.js",
+      "line": 16,
+      "severity": "7.5"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> devsecops-tp@1.0.0 test
+> jest --runInBand tests/security.test.js
+
+FAIL tests/security.test.js
+  ✕ échappe le HTML au lieu de renvoyer un script exécutable (22 ms)
+  ✕ refuse une injection de commande avant tout lancement de processus (14 ms)
+  ✕ refuse les clés de prototype et ne pollue pas les objets (4 ms)
+
+  ● échappe le HTML au lieu de renvoyer un script exécutable
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "<script>"
+    Received string:        "<h1>Bonjour <script>alert(1)</script></h1>"
+
+      13 |   const res = await request(app).get('/hello').query({ name: '<script>alert(1)</script>' });
+      14 |   expect(res.status).toBe(200);
+    > 15 |   expect(res.text).not.toContain('<script>');
+         |                        ^
+      16 |   expect(res.text).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
+      17 | });
+      18 |
+
+      at Object.toContain (tests/security.test.js:15:24)
+
+  ● refuse une injection de commande avant tout lancement de processus
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 200
+
+      19 | test('refuse une injection de commande avant tout lancement de processus', async () => {
+      20 |   const res = await request(app).get('/ping').query({ host: 'google.com;cat /etc/passwd' });
+    > 21 |   expect(res.status).toBe(400);
+         |                      ^
+      22 |   expect(exec).not.toHaveBeenCalled();
+      23 |   expect(execFile).not.toHaveBeenCalled();
+      24 | });
+
+      at Object.toBe (tests/security.test.js:21:22)
+
+  ● refuse les clés de prototype et ne pollue pas les objets
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 200
+
+      26 | test('refuse les clés de prototype et ne pollue pas les objets', async () => {
+      27 |   const res = await request(app).get('/prefs?constructor[prototype][admin]=true');
+    > 28 |   expect(res.status).toBe(400);
+         |                      ^
+      29 |   expect(Object.prototype.admin).toBeUndefined();
+      30 |   expect({}.admin).toBeUndefined();
+      31 | });
+
+      at Object.toBe (tests/security.test.js:28:22)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 3 total
+Snapshots:   0 total
+Time:        0.465 s
+Ran all test suites matching /tests\/security.test.js/i.
